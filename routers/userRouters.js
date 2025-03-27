@@ -1,36 +1,22 @@
+// routers/userRouters.js
 const express = require('express');
+const router = express.Router();
+const userController = require('../controllers/userController');
+const auth = require('../middleware/auth');
 
-const { 
-    createUser, 
-    loginUser } = require('../controllers/userController');
+// Public routes (no authentication required)
+router.post('/register', userController.register);
+router.post('/login', userController.login);
 
-const userRouter = express.Router();
+// Protected routes (authentication required)
+router.get('/profile', auth, userController.getCurrentUser);
+router.put('/profile', auth, userController.updateProfile);
+router.put('/change-password', auth, userController.changePassword);
 
-// get all users
-userRouter.get('/', (req, res) => {
-    res.json({ message: 'get all users' });
-});
+// Quiz interaction routes
+router.post('/quiz-result', auth, userController.saveQuizResult);
+router.get('/learning-stats', auth, userController.getLearningStats);
+router.post('/favorite-quiz', auth, userController.toggleFavoriteQuiz);
+router.get('/favorited-quizzes', auth, userController.getFavoritedQuizzes);
 
-// get single user
-userRouter.get('/:id', (req, res) => {
-    res.json({ message: 'get single user' });
-});
-
-// create user
-userRouter.post('/register', createUser);
-// login user
-userRouter.post('/login', loginUser);
-
-
-// update user
-userRouter.put('/:id', (req, res) => {
-    res.json({ message: 'update user' });
-});
-
-// delete user
-userRouter.delete('/:id', (req, res) => {
-    res.json({ message: 'delete user' });
-});
-
-
-module.exports = userRouter;
+module.exports = router;
