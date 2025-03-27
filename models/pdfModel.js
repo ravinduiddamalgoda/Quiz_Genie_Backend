@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// Reference the User model to link the User with the PDF document
 const pdfSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -13,13 +14,18 @@ const pdfSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  pdf: {
-    type: String, //  PDF URL or path 
+  key: {
+    type: String, // This stores the PDF URL or file path
     required: true,
   },
-});
+  user: {
+    type: mongoose.Schema.Types.ObjectId, // Referencing the User model
+    ref: 'User',
+    required: true, // Ensures each PDF document is linked to a User
+  },
+}, { timestamps: true });
 
-
+// Create the model
 const PdfModel = mongoose.model('PdfModel', pdfSchema);
 
 module.exports = PdfModel;
