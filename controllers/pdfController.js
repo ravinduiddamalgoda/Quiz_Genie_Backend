@@ -37,3 +37,64 @@ exports.createPdf = async (req, res) => {
   }
 };
 */
+
+
+const PdfSchema = require('../models/pdfModel');
+
+// Upload PDF file
+const uploadFile = async (req, res) => {
+  const { title, subject, description } = req.body;
+  const filename = req.file?.filename;
+
+  if (!filename) return res.status(400).json({ message: 'No file uploaded.' });
+
+  try {
+    const newPdf = await PdfSchema.create({ title, subject, description, key: filename });
+    res.json({ status: 'ok', data: newPdf });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: err.message });
+  }
+};
+
+// Get all PDFs
+const getAllFiles = async (req, res) => {
+  try {
+    const data = await PdfSchema.find();
+    res.json({ status: 'ok', data });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: err.message });
+  }
+};
+
+// Delete a PDF
+const deleteFile = async (req, res) => {
+  try {
+    await PdfSchema.findByIdAndDelete(req.params.id);
+    res.json({ status: 'ok', message: 'PDF deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: err.message });
+  }
+};
+
+// Update a PDF
+const updateFile = async (req, res) => {
+  const updateData = { ...req.body };
+  if (req.file) updateData.key = req.file.filename;
+
+  try {
+    const updatedPdf = await PdfSchema.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    if (!updatedPdf) {
+      return res.status(404).json({ status: 'error', message: 'PDF not found' });
+    }
+    res.json({ status: 'ok', message: 'PDF updated', data: updatedPdf });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: err.message });
+  }
+};
+
+module.exports = {
+  uploadFile,
+  getAllFiles,
+  deleteFile,
+  updateFile
+};
