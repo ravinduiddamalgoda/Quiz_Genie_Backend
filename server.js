@@ -3,7 +3,12 @@ require('dotenv').config();
 const cors = require('cors');
 const mongoose = require('mongoose');
 const app = express();
+app.use(express.json());
 const path = require('path');
+
+
+//importing routes
+const battleRoutes = require('./routers/battleRoutes');
 
 app.use(cors({
     origin: 'http://localhost:3000',  
@@ -11,6 +16,12 @@ app.use(cors({
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+//battle routes
+app.use('/api/battle', battleRoutes);
+
+
+
 
 //upload file folder made accessible 
 app.use('/get-files', express.static('uploads'));
