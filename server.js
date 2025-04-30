@@ -7,9 +7,10 @@ const path = require('path');
 const fileUploadRoutes = require('./routers/pdfRoutes');
 const battleRoutes = require('./routers/battleRoutes');
 const userRoutes = require('./routers/userRouters');
-
+const scoreRoutes = require('./routers/scoreRoutes'); // Import score routes
 const reviewRoutes = require('./routers/reviewRoutes');
 const quizRoutes = require('./routers/quizRoutes'); // Add this line
+const leaderboardRoutes = require('./routers/leaderboardRoutes'); // Import leaderboard routes
 
 
 dotenv.config();
@@ -32,9 +33,10 @@ app.use((req, res, next) => {
 app.use('/api/user', userRoutes);
 app.use('/api/battle', battleRoutes);
 app.use('/api/files', fileUploadRoutes);
+app.use('/api/score', scoreRoutes); // Score routes
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/quiz', quizRoutes); // Add this line
-
+app.use('/api/leaderboard', leaderboardRoutes); // Add this line
 
 // Root route
 app.get('/', (req, res) => res.send('Hello world'));
