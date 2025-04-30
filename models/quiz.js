@@ -135,52 +135,6 @@ QuizSchema.pre('save', function(next) {
   next();
 });
 
-// Document Schema - for source PDFs
-// const DocumentSchema = new Schema({
-//   title: {
-//     type: String,
-//     required: true,
-//     trim: true
-//   },
-//   description: {
-//     type: String,
-//     trim: true
-//   },
-//   fileName: {
-//     type: String,
-//     required: true
-//   },
-//   fileType: {
-//     type: String,
-//     required: true,
-//     enum: ['pdf', 'doc', 'docx', 'txt'],
-//     default: 'pdf'
-//   },
-//   language: {
-//     type: String,
-//     required: true,
-//     enum: ['english', 'sinhala'],
-//     default: 'english'
-//   },
-//   filePath: {
-//     type: String,
-//     required: true
-//   },
-//   uploadedAt: {
-//     type: Date,
-//     default: Date.now
-//   },
-//   // For categorizing documents
-//   tags: [{
-//     type: String,
-//     trim: true
-//   }],
-//   // The user who uploaded the document
-//   uploadedBy: {
-//     type: Schema.Types.ObjectId,
-//     ref: 'User'
-//   }
-// });
 
 // User attempt schema - to track user performance
 const QuizAttemptSchema = new Schema({
