@@ -32,9 +32,7 @@ app.use((req, res, next) => {
 app.use('/api/user', userRoutes);
 app.use('/api/battle', battleRoutes);
 app.use('/api/files', fileUploadRoutes);
-
 app.use('/api/reviews', reviewRoutes);
-
 app.use('/api/quiz', quizRoutes); // Add this line
 
 
