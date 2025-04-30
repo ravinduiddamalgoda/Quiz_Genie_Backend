@@ -21,7 +21,7 @@ const pdfSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId, // Referencing the User model
     ref: 'User',
-    required: true, // Ensures each PDF document is linked to a User
+    //required: true, // Ensures each PDF document is linked to a User
   },
 }, { timestamps: true });
 
