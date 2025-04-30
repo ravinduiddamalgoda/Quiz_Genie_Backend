@@ -8,33 +8,38 @@ const scoreSchema = new Schema({
     ref: 'User',  // Link to User model
     required: true
   },
+  battle: {
+    type: Schema.Types.ObjectId,
+    ref: 'Battle',  // Link to Battle model
+    required: true
+  },
   totalScore: {
     type: Number,
-    default: 0  // Total cumulative score
+    default: 0
   },
   totalQuestionsAnswered: {
     type: Number,
-    default: 0  // Total number of questions the user has answered
+    default: 0
   },
   correctAnswerRate: {
     type: Number,
-    default: 0  // Correct answer rate percentage
+    default: 0
   },
   rounds: [{
     round: {
-      type: Number,  // Round number
+      type: Number,
       required: true
     },
     roundScore: {
-      type: Number,  // Score for this round
+      type: Number,
       required: true
     },
     correctAnswers: {
-      type: Number,  // Number of correct answers in this round
+      type: Number,
       required: true
     },
     totalQuestions: {
-      type: Number,  // Total questions in this round (e.g., 10)
+      type: Number,
       required: true
     }
   }],
@@ -44,11 +49,11 @@ const scoreSchema = new Schema({
   }
 }, { timestamps: true });
 
-// Method to update score for a user after completing a round
+// Method to update score after a round
 scoreSchema.methods.updateScore = async function(correctAnswers, totalQuestions, round) {
-  const roundScore = (correctAnswers / totalQuestions) * 10;  // Maximum score per round is 10
-  
-  // Update rounds array
+  const roundScore = (correctAnswers / totalQuestions) * 10;
+
+  // Add the round data to the rounds array
   this.rounds.push({
     round,
     roundScore,
@@ -59,7 +64,7 @@ scoreSchema.methods.updateScore = async function(correctAnswers, totalQuestions,
   // Update total score, total questions answered, and correct answer rate
   this.totalScore += roundScore;
   this.totalQuestionsAnswered += totalQuestions;
-  this.correctAnswerRate = (this.totalScore / (this.totalQuestionsAnswered * 10)) * 100; // Recalculate correct answer rate
+  this.correctAnswerRate = (this.totalScore / (this.totalQuestionsAnswered * 10)) * 100;
 
   // Update last updated time
   this.lastUpdated = Date.now();

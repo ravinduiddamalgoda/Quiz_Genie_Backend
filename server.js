@@ -7,6 +7,7 @@ const path = require('path');
 const fileUploadRoutes = require('./routers/pdfRoutes');
 const battleRoutes = require('./routers/battleRoutes');
 const userRoutes = require('./routers/userRouters');
+const scoreRoutes = require('./routers/scoreRoutes'); // Import score routes
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use((req, res, next) => {
 app.use('/api/user', userRoutes);
 app.use('/api/battle', battleRoutes);
 app.use('/api/files', fileUploadRoutes);
+app.use('/api/score', scoreRoutes); // Score routes
 
 // Root route
 app.get('/', (req, res) => res.send('Hello world'));
