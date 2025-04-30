@@ -12,6 +12,7 @@ router.get('/:id', quizController.getQuizById);
 // Protected routes (regular users)
 router.post('/attempt', auth, quizController.recordQuizAttempt);
 router.get('/user/attempts/:userId', auth, quizController.getUserAttempts);
+router.get('/suggestions/:userId', auth, quizController.getQuizSuggestions); // New route for quiz suggestions
 
 // Admin only routes
 router.post('/', auth, adminAuth, quizController.createQuiz);
