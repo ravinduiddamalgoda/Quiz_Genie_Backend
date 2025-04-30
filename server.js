@@ -92,7 +92,51 @@ const storage = multer.diskStorage({
     }
   });
 
-  
+  //edit api----------------------------------------------
+  // Update PDF endpoint
+app.put("/update-file/:id", upload.single("selectedFile"), async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { title, subject, description } = req.body;
+    
+    // Create an update object
+    const updateData = {
+      title,
+      subject,
+      description
+    };
+    
+    // If a new file was uploaded, add it to the update
+    if (req.file) {
+      updateData.key = req.file.filename;
+    }
+    
+    // Update the document
+    const updatedPdf = await PdfSchema.findByIdAndUpdate(
+      id, 
+      updateData,
+      { new: true } // Return the updated document
+    );
+    
+    if (!updatedPdf) {
+      return res.status(404).json({ status: "error", message: "PDF not found" });
+    }
+    
+    res.send({ 
+      status: "ok", 
+      message: "PDF updated successfully",
+      data: updatedPdf
+    });
+    
+  } catch (error) {
+    console.error("Update error:", error);
+    res.status(500).json({ 
+      status: "error", 
+      message: "An error occurred while updating the PDF", 
+      error: error.message 
+    });
+  }
+});
 
 
 
