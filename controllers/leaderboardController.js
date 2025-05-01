@@ -36,6 +36,32 @@ exports.getLeaderboard = async (req, res) => {
   }
 };
 
+exports.getLeaderboardByBattleId = async (req, res) => {
+  const { battleId } = req.params; // Extract battle ID from request parameters
+
+  try {
+    // Fetch the top 10 users for the specific battle, sorted by totalScore in descending order
+    const leaderboard = await Score.find({ battle: battleId })
+      .sort({ totalScore: -1 }) // Sort by total score in descending order
+      .limit(10)
+      .populate({
+        path: 'user', // Populate the 'user' field
+        select: 'name totalScore', // Select only the 'name' and 'totalScore' fields
+        model: 'User', // Ensure we're populating the User model
+      });
+
+    // Check if leaderboard is empty
+    // if (!leaderboard || leaderboard.length === 0) {
+    //   return res.status(404).json({ message: 'No leaderboard data found for this battle' });
+    // }
+
+    res.status(200).json({ leaderboard });
+  } catch (error) {
+    console.error('Error fetching leaderboard:', error); // Log the error for debugging
+    res.status(500).json({ message: 'Error fetching leaderboard', error: error.message });
+  }
+};
+
 // Helper function to calculate rank for a specific user
 async function getUserRank(userId) {
   const userScore = await Score.findOne({ user: userId }).select('totalScore');

@@ -57,6 +57,28 @@ exports.getUserBattles = async (req, res) => {
   }
 };
 
+// Get battle details by ID
+exports.getBattleDetails = async (req, res) => {
+  const { id } = req.params;  // Get the battle ID from the URL parameters
+
+  try {
+    // Find the battle by its ID
+    const battle = await Battle.findById(id);
+
+    if (!battle) {
+      // If no battle is found, send a 404 error
+      return res.status(404).json({ error: 'Battle not found' });
+    }
+
+    // If the battle is found, return it in the response
+    res.status(200).json(battle);
+  } catch (error) {
+    // Catch any errors and return a 500 status with an error message
+    res.status(500).json({ error: 'Failed to fetch battle details' });
+  }
+};
+
+
 
 // Delete a battle by ID
 exports.deleteBattle = async (req, res) => {
@@ -81,6 +103,7 @@ exports.getAllBattles = async (req, res) => {
     const battles = await Battle.find().sort({ createdAt: -1 });
     res.status(200).json(battles);
   } catch (error) {
+    console.error('Error fetching all battles:', error); // Log the error
     res.status(500).json({ error: 'Failed to fetch battles' });
   }
 };
