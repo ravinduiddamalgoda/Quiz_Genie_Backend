@@ -15,4 +15,7 @@ router.get('/getUserBattles/:userId', battleController.getUserBattles);
 // Delete a battle
 router.delete('/:id', battleController.deleteBattle);
 
+// Get all battles
+router.get('/allBattles', battleController.getAllBattles);
+
 module.exports = router;

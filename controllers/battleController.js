@@ -75,5 +75,15 @@ exports.deleteBattle = async (req, res) => {
   }
 };
 
+// get all battles
+exports.getAllBattles = async (req, res) => {
+  try {
+    const battles = await Battle.find().sort({ createdAt: -1 });
+    res.status(200).json(battles);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch battles' });
+  }
+};
+
 
 
