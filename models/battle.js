@@ -27,6 +27,12 @@ const battleSchema = new mongoose.Schema({
     type: Date, 
     default: Date.now 
 },
+quiz: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "Quiz",
+    required: false,
+    default: null
+},
 });
 
 module.exports = mongoose.model("Battle", battleSchema);

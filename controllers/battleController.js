@@ -108,5 +108,30 @@ exports.getAllBattles = async (req, res) => {
   }
 };
 
+exports.updateQuizInBattle = async (req, res) => {
+  const { id } = req.params; // Get the battle ID from the URL parameters
+  const { quizId } = req.body; // Get the quiz ID from the request body
+
+  try {
+    // Find the battle by its ID
+    const battle = await Battle.findById(id);
+
+    if (!battle) {
+      // If no battle is found, send a 404 error
+      return res.status(404).json({ error: 'Battle not found' });
+    }
+
+    // Update the quiz in the battle
+    battle.quiz = quizId;
+    await battle.save();
+
+    // Return the updated battle in the response
+    res.status(200).json(battle);
+  } catch (error) {
+    // Catch any errors and return a 500 status with an error message
+    res.status(500).json({ error: 'Failed to update quiz in battle' });
+  }
+}
+
 
 
