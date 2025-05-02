@@ -91,7 +91,7 @@ const getAllFiles = async (req, res) => {
     
     const [pdfs, total] = await Promise.all([
       PdfModel.find(query)
-        .select('title subject description key filename size createdAt user')
+        .select('title subject description key filename size createdAt user isIndexed')
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit),
@@ -104,7 +104,7 @@ const getAllFiles = async (req, res) => {
       total,
       pages: Math.ceil(total / limit),
       currentPage: page,
-      data: pdfs
+      data: pdfs,
     });
   } catch (error) {
     console.error('Error fetching files:', error);
