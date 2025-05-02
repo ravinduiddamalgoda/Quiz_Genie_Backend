@@ -21,6 +21,6 @@ router.delete('/:id', battleController.deleteBattle);
 //getr single battle details
 router.get('/:id', battleController.getBattleDetails);
 
-
+router.put('/update-quiz/:id', battleController.updateQuizInBattle);
 
 module.exports = router;
