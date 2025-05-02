@@ -60,13 +60,14 @@ exports.generateQuiz = async (req, res) => {
     //     message: 'No relevant content found for the given prompt' 
     //   });
     // }
-    
+    // const pdfIds = pdfs.map(pdf => pdf._id);
     // 3. Generate quiz questions
-    const quizQuestions = await generateMCQQuiz(
+    const quizQuestions = await generateMCQQuiz (
       prompt, 
       numQuestions, 
       language,
-      userId
+      userId,
+      pdfIds
     );
     
     console.log('Generated quiz questions:', quizQuestions);

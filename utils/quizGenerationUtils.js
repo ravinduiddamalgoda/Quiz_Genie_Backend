@@ -23,36 +23,40 @@ const LANGUAGE_INSTRUCTIONS = {
  * @param {string} targetLanguage - Force specific language (optional)
  * @returns {Promise<Array<Object>>} - Generated quiz questions
  */
-const generateMCQQuiz = async (userPrompt, numQuestions = 10, targetLanguage = 'english', UserId) => {
+const generateMCQQuiz = async (userPrompt, numQuestions = 10, targetLanguage = 'english', UserId , pdfIds) => {
   try {
     // First perform similarity search with userPrompt
-    const similarDocuments = await performSimilaritySearch(userPrompt, numQuestions ,UserId );
+    const similarDocuments = await performSimilaritySearch(userPrompt, numQuestions ,UserId , pdfIds );
 
-    // if (!similarDocuments || similarDocuments.length === 0) {
-    //   return { status: 'error', message: 'No relevant Information found for the quiz generation.' };
-    // }
-
+    if (!similarDocuments || similarDocuments.length === 0) {
+      return { status: 'error', message: 'No relevant Information found for the quiz generation.' };
+    }
+    console.log("Similar documents:", similarDocuments);
     // Determine language for question generation
+    let combinedText;
     let language;
     if (targetLanguage) {
       language = targetLanguage;
     } else {
-      let combinedText;
-      if(!similarDocuments || similarDocuments.length === 0) {
-      const contentTexts = similarDocuments.map(doc => doc.pageContent);
-       combinedText = contentTexts.join(' ');
-      }
-      if (combinedText.length > 0) {
-        language = detectLanguage(combinedText);
-      } else {
-        language = detectLanguage(userPrompt); // Fallback to detecting language from the prompt
-      }
+      
     }
-    let combinedContext = userPrompt; // Fallback to user prompt if no documents found
+    if(similarDocuments) {
+      console.log(similarDocuments);
+      combinedText = similarDocuments.map(doc => doc.pageContent).join(' ');
+    // const contentTexts = similarDocuments.map(doc => doc.pageContent);
+    //  combinedText = contentText.join(' ');
+    }
+    // if (combinedText.length > 0) {
+    //   language = detectLanguage(combinedText);
+    // } else {
+    //   language = detectLanguage(userPrompt); // Fallback to detecting language from the prompt
+    // }
+     // Fallback to user prompt if no documents found
+    console.log("Combined context:", combinedText);
     // Create combined context from retrieved documents
-    if(!similarDocuments || similarDocuments.length === 0) {
-       combinedContext = similarDocuments.map(doc => doc.pageContent).join('\n\n');
-    }
+    // if(!similarDocuments || similarDocuments.length === 0) {
+    //   combinedText = similarDocuments.map(doc => doc.pageContent).join('\n\n');
+    // }
 
 
     // Distribute questions among difficulty levels
@@ -68,7 +72,7 @@ const generateMCQQuiz = async (userPrompt, numQuestions = 10, targetLanguage = '
 
     // Get language-specific instructions
     const languageInstruction = LANGUAGE_INSTRUCTIONS[language] || LANGUAGE_INSTRUCTIONS.en;
-
+    // combinedText += `\n\n${userPrompt}`; // Append language instruction to the context
     // Generate questions for each difficulty
     const generationPromises = difficulties.map(async (difficulty) => {
       const prompt = `
@@ -77,10 +81,14 @@ const generateMCQQuiz = async (userPrompt, numQuestions = 10, targetLanguage = '
         ${languageInstruction}
 
         CONTEXT:
-        ${userPrompt}
+        ${combinedText}
+
+        PROMPT:
+        ${userPrompt} only generate for based on this prompt.
 
         Generate a question with 4 answer options (A, B, C, D), and indicate the correct answer.
-        The question should test understanding of specific details in the context.
+        The question should test understanding of specific details in the context. Also do not repeat the same question again as well. I need totally different 10 questions with this pattern.
+        The question should be relevant to the context and not too general.
 
         For ${difficulty} difficulty:
         - Easy: Basic factual questions that can be directly found in the text
