@@ -1,4 +1,5 @@
 const Battle = require('../models/battle');
+const { Quiz } = require('../models/quiz');
 
 // Create a new battle
 exports.createBattle = async (req, res) => {
@@ -119,6 +120,12 @@ exports.updateQuizInBattle = async (req, res) => {
     if (!battle) {
       // If no battle is found, send a 404 error
       return res.status(404).json({ error: 'Battle not found' });
+    }
+
+    const quiz = await Quiz.findById(quizId); // Find the quiz by its ID
+    if (!quiz) {
+      // If no quiz is found, send a 404 error
+      return res.status(404).json({ error: 'Quiz not found' });
     }
 
     // Update the quiz in the battle
