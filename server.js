@@ -1,8 +1,8 @@
 // server.js
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const dotenv = require('dotenv');
 const path = require('path');
 
 // Route imports
@@ -13,14 +13,14 @@ const scoreRoutes = require('./routers/scoreRoutes');
 const reviewRoutes = require('./routers/reviewRoutes');
 const quizRoutes = require('./routers/quizRoutes');
 const leaderboardRoutes = require('./routers/leaderboardRoutes');
+const quizGeneratorRoutes = require('./routers/quizGeneratorRoutes')
 
-dotenv.config();
 
 const app = express();
 
 // CORS configuration
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin:process.env.FRONTEND_URL || 'http://localhost:3000',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -40,6 +40,8 @@ app.use((req, res, next) => {
   next();
 });
 
+console.log('Loading .env from:', __dirname);
+console.log('AWS_REGION:', process.env.AWS_REGION);
 // Routes
 app.use('/api/user', userRoutes);
 app.use('/api/battle', battleRoutes);
@@ -48,9 +50,10 @@ app.use('/api/score', scoreRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/quiz', quizRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
+app.use('/api/quiz-generator', quizGeneratorRoutes);
 
 // Root route
-app.get('/', (req, res) => res.send('Hello world'));
+app.get('/', (req, res) => res.send('Quiz Genie API'));
 
 // Connect to MongoDB and start server
 mongoose.connect(process.env.MONGO_URI)
