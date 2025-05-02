@@ -77,7 +77,7 @@ const generateMCQQuiz = async (userPrompt, numQuestions = 10, targetLanguage = '
         ${languageInstruction}
 
         CONTEXT:
-        ${combinedContext}
+        ${userPrompt}
 
         Generate a question with 4 answer options (A, B, C, D), and indicate the correct answer.
         The question should test understanding of specific details in the context.
