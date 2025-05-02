@@ -50,7 +50,7 @@ exports.generateQuiz = async (req, res) => {
         message: 'None of the selected PDFs have been indexed for search' 
       });
     }
-    
+    console.log('done up to here');
     // // 3. Perform similarity search across all collections
     // const retrievedDocuments = await searchMultipleCollections(prompt, collectionNames, 15);
     
