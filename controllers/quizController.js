@@ -230,13 +230,20 @@ exports.recordQuizAttempt = async (req, res) => {
   try {
     const {
       quizId,
-      userId,
       responses,
       score,
       timeTaken,
       incorrectTopics
     } = req.body;
+    
+    const userId = req.user.id; // Assuming user ID is available in req.user
 
+    console.log(userId, 'userId');
+    console.log(quizId, 'quizId');
+    console.log(responses, 'responses');
+    console.log(score, 'score');
+    console.log(timeTaken, 'timeTaken');
+    console.log(incorrectTopics, 'incorrectTopics');
     // Validate required fields
     if (!quizId || !userId) {
       return res.status(400).json({ message: 'Quiz ID and User ID are required' });
