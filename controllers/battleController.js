@@ -112,7 +112,7 @@ exports.getAllBattles = async (req, res) => {
 exports.updateQuizInBattle = async (req, res) => {
   const { id } = req.params; // Get the battle ID from the URL parameters
   const { quizId } = req.body; // Get the quiz ID from the request body
-
+  console.log(quizId);
   try {
     // Find the battle by its ID
     const battle = await Battle.findById(id);
