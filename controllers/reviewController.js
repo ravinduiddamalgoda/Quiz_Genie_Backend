@@ -68,15 +68,15 @@ exports.deleteReview = async (req, res) => {
 
 exports.updateReview = async (req, res) => {
   try {
-    const { rating, title, description, wouldRecommend, email } = req.body;
+    const { rating, title, description } = req.body;
     const review = await Review.findById(req.params.id);
     if (!review) return res.status(404).json({ error: 'Review not found' });
 
     review.rating = rating;
     review.title = title;
     review.description = description;
-    review.wouldRecommend = wouldRecommend;
-    review.email = email;
+    // review.wouldRecommend = wouldRecommend;
+    // review.email = email;  
 
     const updatedReview = await review.save();
     res.json({ data: updatedReview });
