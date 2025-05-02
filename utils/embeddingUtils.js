@@ -332,7 +332,7 @@ const createAndStoreEmbeddings = async (text, metadata) => {
  * @param {number} k - Number of results to return
  * @returns {Promise<Array<Object>>} - Search results
  */
-  const performSimilaritySearch = async (query, k = 500, userId) => {
+  const performSimilaritySearch = async (query, k = 100, userId , pdfIds) => {
     try {
       // Initialize OpenAI embeddings for the query
       const embeddings = new OpenAIEmbeddings({
@@ -359,12 +359,17 @@ const createAndStoreEmbeddings = async (text, metadata) => {
       });
   
       // Perform similarity search
-      const results = await vectorStore.similaritySearch(query, k);
-      console.log('Similarity search results:', results);
+      const results = await vectorStore.similaritySearch(query, k, {
+        userId,
+        documentId : {
+          in: pdfIds
+        }
+      });
+      // console.log('Similarity search results:', results);
       // Filter results based on metadata (e.g., userId)
-      const filteredResults = results.filter(result => result.metadata.userId === userId);
-  
-      return filteredResults;
+      // const filteredResults = results.filter(result => result.metadata.userId === userId);
+      
+      return results;
     } catch (error) {
       console.error('Error performing similarity search:', error);
       throw error;
