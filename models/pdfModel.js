@@ -1,31 +1,93 @@
+// models/pdfModel.js
 const mongoose = require('mongoose');
 
-// Reference the User model to link the User with the PDF document
 const pdfSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true,
+    required: [true, 'PDF title is required'],
+    trim: true
   },
   subject: {
     type: String,
-    required: true,
+    required: [true, 'Subject is required'],
+    trim: true
   },
   description: {
     type: String,
-    required: true,
+    required: [true, 'Description is required'],
+    trim: true
   },
   key: {
-    type: String, // This stores the PDF URL or file path
-    required: true,
+    type: String, // S3 key for the PDF file
+    required: [true, 'S3 key is required']
+  },
+  filename: {
+    type: String, // Original filename
+    required: [true, 'Original filename is required']
+  },
+  size: {
+    type: Number, // File size in bytes
+    required: [true, 'File size is required']
   },
   user: {
-    type: mongoose.Schema.Types.ObjectId, // Referencing the User model
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    //required: true, // Ensures each PDF document is linked to a User
+    // Optional since some systems might not require authentication
   },
-}, { timestamps: true });
+  vectorCollection: {
+    type: String, // Name of the vector collection in PG Vector
+    default: null
+  },
+  language: {
+    type: String, 
+    default: 'english'
+  },
+  isIndexed: {
+    type: Boolean,
+    default: false
+  },
+  lastIndexed: {
+    type: Date,
+    default: null
+  },
+  totalPages: {
+    type: Number,
+    default: 0
+  },
+  topics: [{
+    type: String,
+    trim: true
+  }],
+  quizCount: {
+    type: Number,
+    default: 0
+  }
+}, { 
+  timestamps: true, 
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+});
 
-// Create the model
+// Virtual for formatted file size
+pdfSchema.virtual('formattedSize').get(function() {
+  const bytes = this.size;
+  if (bytes < 1024) {
+    return bytes + ' bytes';
+  } else if (bytes < 1024 * 1024) {
+    return (bytes / 1024).toFixed(2) + ' KB';
+  } else if (bytes < 1024 * 1024 * 1024) {
+    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+  } else {
+    return (bytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+  }
+});
+
+// Create a text index for search
+pdfSchema.index(
+  { title: 'text', subject: 'text', description: 'text' },
+  { name: 'pdf_text_index' }
+);
+
 const PdfModel = mongoose.model('PdfModel', pdfSchema);
 
 module.exports = PdfModel;

@@ -161,24 +161,18 @@ const QuizAttemptSchema = new Schema({
     max: 100
   },
   // Track responses to individual questions
-  responses: [{
-    question: {
-      type: Schema.Types.ObjectId
-      // This is the ID of the question in the quiz
-    },
-    selectedOptions: [{
-      type: String
-      // For multiple choice questions
-    }],
-    textAnswer: {
-      type: String,
-      trim: true
-      // For short answer questions
-    },
-    isCorrect: {
-      type: Boolean
-    }
-  }],
+ responses: [{
+  question: {
+    type: Schema.Types.Mixed, // Changed from ObjectId to Mixed to accept both ObjectId and numbers
+    required: true
+  },
+  selectedOption: {
+    type: Number
+  },
+  isCorrect: {
+    type: Boolean
+  }
+}],
   // For adaptive learning analysis
   timeTaken: {
     type: Number // Time taken in seconds
